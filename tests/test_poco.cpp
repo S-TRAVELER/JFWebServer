@@ -232,6 +232,13 @@ public:
                  Poco::StreamCopier copier;
                  copier.copyToString(rs, requestText);
                  size_t iStart=0,pos;
+                 cout<<requestText<<endl;
+                 for(int i=0;i<3;++i){
+                     if((pos=requestText.find('\n',iStart))!=requestText.npos){
+                        iStart=pos+1;
+                     }
+                 }
+
                  while((pos=requestText.find('\n',iStart))!=requestText.npos){
                     it->second->push_back(requestText.substr(iStart,pos-iStart));
                     iStart=pos+1;

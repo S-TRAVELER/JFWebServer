@@ -37,26 +37,8 @@ int main(){
 
         cout<<t.format();
     }*/
-    {
-         cpu_timer t;
-        int tmp;
-        ofstream qafile("QuestionAndAnswer.txt", ios::out);
-        for(int i=0;i<100;++i){
-            for(int j=0;j<10000*5;++j){
-                qafile<<rand()%2+1;
-            }
-        }
-        for(int i=0;i<1500;++i){
-            for(int j=0;j<10000*5;++j){
-                tmp+=rand()%2+1;
-            }
-        }
-        qafile.close();
-//        sleep(1);
-        usleep(300000);
-        cout<<t.format();
-    }
-    /*
+
+
     {
         cpu_timer t;
 
@@ -90,7 +72,7 @@ int main(){
         }
 
         cout<<t.format();
-    }*/
+    }
 
     return 0;
 }
