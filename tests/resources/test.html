@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>app</title>
+  <link rel="stylesheet" href="http://at.alicdn.com/t/font_1447719_jysoa1vnfkc.css">
+  <style>
+    /* common */
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      position: relative;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      background: #eee;
+    }
+
+    ul li {
+      list-style: none;
+    }
+
+    .box {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 2px;
+    }
+
+    .box.active { display: block; }
+
+    .box h2 {
+      padding: 10px 20px;
+      color: #fff;
+      background: #25bb9b;
+    }
+
+    input {
+      padding: 5px 10px;
+      width: 50px;
+      outline: none;
+      border: 1px solid #e0e0e0;
+      border-radius: 3px;
+    }
+
+    button {
+      padding: 5px 15px;
+      color: #fff;
+      outline: none;
+      border: none;
+      border-radius: 3px;
+      font-size: 16px;
+      background: #25bb9b;
+      cursor: pointer;
+    }
+    button.unneed { 
+      display: none!important;
+    }
+
+    button:hover {
+      box-shadow: 0 4px 8px 0 #E0E2E5;
+    }
+
+    .bearBgd {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 200px;
+      height: 190px;
+      background: url("../img/bear.png");
+      background-repeat: no-repeat;
+      background-position: cover;
+      opacity: 0.8;
+    }
+
+    /* 开始界面 */
+    .start { 
+      width: 30%; 
+      text-align: center;
+    }
+
+    .start button {
+      display: block;
+      margin: 20px auto;
+      width: 200px;
+      height: 50px;
+    }
+
+    .start .info {
+      margin-bottom: 5px;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .toInitial { background: #7B97EA; }
+    .toDownLoad { background: #FFB063; }
+    .toUpLoad { background: #34B2BE; }
+
+    /* 题量范围界面 */
+    .initial { width: 30%; }
+
+    .initial div { 
+      display: flex;
+      padding-top: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+    .initial div.unneed { display: none; }
+
+    .initial button {
+      display: block;
+      margin: 20px auto;
+    }
+
+    /* 做题界面 */
+    .practice-ct { width: 40%; }
+    .practice-ct .title {
+      padding: 20px 40px;
+      font-size: 20px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .topic-wrap { 
+      display: none!important;
+      padding: 20px;
+      display: flex; 
+      align-items: center;
+    }
+
+    .topic-wrap.active {
+      display: block!important;
+    }
+
+    .topic-wrap .num {
+      padding: 5px;
+      border-radius: 5px;
+      background: #e5e5e5;
+    }
+
+    .topic-wrap .answer {
+      display: none;
+      margin-left: 20px;
+      color: #ff6547;
+      font-size: 16px;
+    }
+    .topic-wrap .answer.active { 
+      display: inline-block; 
+    }
+
+    .topic-wrap .topic {
+      display: inline-block;
+      margin: 0 20px;
+    }
+
+    .content .btn-ct {
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    .btn-ct button { margin: 0 10px; }
+    .btn-ct button:first-child {
+      background: #ff6547;
+    }
+
+    .btn-ct .info {
+      padding: 5px;
+      color: #ccc;
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .sheet-ct {
+      margin: 0 5px;
+      padding: 10px;
+      border-top: 1px dashed #e0e0e0;
+    }
+
+    .topic-list::after {
+      display: block;
+      content: '';
+      clear: both;
+    }
+
+    .topic-list li {
+      float: left;
+      margin-left: 20px;
+      padding: 5px 8px;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    .topic-list li.active {
+      color: #fff!important;
+      background: #25bb9b!important;
+    }
+
+    .sheet { text-align: right; }
+    .sheet:hover { 
+      color: #25bb9b;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- 维尼熊贴纸右下角 -->
+  <div class="bearBgd"></div>
+
+  <!-- 开始选项框 -->
+  <div class="start box active">
+    <h2>欢迎使用快乐练习(网页版)</h2>
+    <button class = "toInitial">在线做题</button>
+    <button class="toDownLoad">生成离线文件</button>
+    <button class="toUpLoad">上传文件对答案</button>
+    <span class="info">* 本站练习为小学四则运算练习</span>
+  </div>
+
+  <!-- 练习选项框 -->
+  <div class="initial box">
+    <h2>小学四则运算练习选项</h2>
+    <div class="topic-num unneed">
+      <p>请输入题目数量：</p>
+      <input type="text">
+    </div>
+    <div class="range">
+      <p>请输入题目范围：</p>
+      <input type="text">
+    </div>
+    <button class="startBtn">开始做题</button>
+    <button class="createBtn unneed">生成文件</button>
+  </div>
+
+  <!-- 在线做题框 -->
+  <div class="practice-ct box">
+    <div class="title">
+      <p>小学四则运算练习</p>
+    </div>
+    <div class="content">
+      <!-- 题目 -->
+      <div class="topic-ct">
+        
+      </div>
+      <!-- 提交 下一题按钮 -->
+      <div class="btn-ct">
+        <button class="submit">提交</button>
+        <button class="next">下一题</button>
+        <p class="info">* 交卷即可查看答题结果</p>
+      </div>
+    </div>
+    <!-- 答题卡 -->
+    <div class="sheet-ct">
+      <ul class="topic-list">
+        <li class="active">1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+      </ul>
+      <div class="sheet">
+        <span class="switch">隐藏答题卡</span>
+        <span class="iconfont icon-up"></span>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script>
+    var Start = {
+    init: function() {
+      this.$start = $('.start')
+      this.$toInitial = this.$start.find('.toInitial')
+      this.$toDownLoad = this.$start.find('.toDownLoad')
+      this.$toUpLoad = this.$start.find('.toUpLoad')
+
+      this.bind()
+    },
+    bind: function() {
+      var _this = this
+
+      this.$toInitial.on('click', function() {
+        _this.outStart()
+      })
+
+      this.$toDownLoad.on('click', function() {
+        _this.outStart()
+        // $('.topic-num').removeClass('unneed')
+        // $('.startBtn').addClass('unneed') // 显示题量范围和生成btn
+        $('.initial').find('h2')[0].innerText = "生成文件"
+        $('.createBtn').removeClass('unneed')
+                      .siblings()
+                      .addClass('unneed')  // 只有生成btn
+      })
+
+      this.$toUpLoad.on('click', function() {
+        
+      })
+    },
+    outStart: function() {
+      this.$start.removeClass('active')
+      $('.initial').addClass('active')  
+    }
+  }
+
+  var Initial = {
+    init: function() {
+      this.$container = $('.initial')
+      this.$practice = $('.practice-ct')
+      this.$range = this.$container.find('.range input')  
+      this.$startBtn = this.$container.find('.startBtn')
+      this.$createBtn = this.$container.find('.createBtn')
+      this.answer = []
+
+      this.bind()
+    },
+    bind: function() {
+      var _this = this
+
+      this.$startBtn.on('click', function() {
+        let range = _this.$range[0].value
+
+        $.ajax({
+          url: '/question',
+          type: 'GET',
+          dataType: 'json',
+          data: { range: range }
+        })
+        .done(function(res) {
+          if (res.statusCode === 200) {
+            let html = _this.setTopic(res)
+            _this.$practice.find('.topic-ct').append(html)
+            _this.showPrac()
+          }
+        })
+        .fail(function(err) {
+          console.log(err)
+        })   
+      })
+
+      this.$createBtn.on('click', function() {  // 点击生成文件按钮下载题目文件
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', '/getFile', true)
+        xhr.responseType = 'blob'
+        xhr.onload = function() {
+          if (this.status === 200) {
+            var blob = this.response
+            var a = document.createElement('a')
+            a.download = 'data.doc'
+            a.href = window.URL.createObjectURL(blob)
+            a.click()
+          }
+        }
+        xhr.send()
+      })
+    },
+    showPrac: function() {
+      this.$container.removeClass('active')
+      this.$practice.addClass('active')
+      this.$practice.find('.topic-ct div')
+                    .eq(0).addClass('active')
+    },
+    setTopic: function(res) {
+      let _this = this
+      let html = ""
+      res.data.foreach(function(item, idx) {
+        _this.answer.push(item.answer)
+        html += `
+        <div class="topic-wrap">
+          <span class="num">${idx+1}/10</span>
+          <p class="topic">${item.question}</p>
+          <input type="text">
+          <span class="answer">正确答案：${item.answer}</span>
+        </div>`
+      })
+      return $(html)
+    },
+    checkAnswer: function(uAnswer) {
+      let _this = this
+      let correct = [],
+          wrong = []
+      uAnswer.forEach(function(item, idx) {
+        if (item === _this.answer[idx]) {
+          correct.push(idx)
+        } else {
+          wrong.push(idx)
+        }
+      })
+      return { correct, wrong }
+    }
+  }
+
+  var Work = {
+    init: function() {
+      this.$practice = $('.practice-ct')
+      this.$list = this.$practice.find('.topic-list')
+      this.$sheet = this.$practice.find('.sheet')
+      this.$next = this.$practice.find('.next')
+      this.$submit = this.$practice.find('.submit')
+      this.idx = 0
+      this.bind()
+    },
+    bind: function() {
+      var _this = this
+
+      this.$submit.on('click', function() {
+        let uAnswer = []
+        let obj = $('.topic-wrap').find('input')
+        for (let i = 0; i < 10; i++) {
+          uAnswer.push(obj[i].value)
+        }
+        let result = Initial.checkAnswer(uAnswer)
+        let correct = result.correct
+        let wrong = result.wrong
+        _this.showResult(correct, true)
+        _this.showResult(wrong, false)
+      })
+
+      this.$next.on('click', function() {
+        _this.switchTopic(++_this.idx)
+      })
+      
+      this.$list.on('click', 'li', function(e) {
+        var li = $(e.currentTarget)
+        _this.idx = li[0].innerText - 1
+        _this.switchTopic(_this.idx)
+      })
+
+      this.$sheet.on('click', function() {
+        if (_this.$list.css('display') !== "none") {
+          _this.$sheet.find('.switch')[0].innerText = "展示答题卡"
+          _this.$sheet.find('.iconfont')
+                      .removeClass('icon-up')
+                      .addClass('icon-down')
+          _this.$list.css('display', 'none')
+        }
+        else if (_this.$list.css('display') === "none") {
+          _this.$sheet.find('.switch')[0].innerText = "隐藏答题卡"
+          _this.$sheet.find('.iconfont')
+                      .removeClass('icon-down')
+                      .addClass('icon-up')
+          _this.$list.css('display', 'block')
+        }
+      })
+    },
+    switchTopic: function(idx) {
+      this.$list.find('li').eq(idx)
+                .addClass('active')
+                .siblings()
+                .removeClass('active')
+      $('.topic-wrap').eq(idx)
+                      .addClass('active')
+                      .siblings()
+                      .removeClass('active')
+    },
+    showResult: function(arr, result) {
+      var _this = this
+
+      if (result) {
+        arr.forEach(function(idx) {
+          _this.$list.find('li').eq(idx-1)
+                    .css('color', '#25bb9b')
+        })
+      } else {
+        arr.forEach(function(idx) {
+          _this.$list.find('li').eq(idx-1)
+                    .css({
+                      'background': '#ff6547',
+                      'color': '#fff'
+                    })
+          $('.answer').eq(idx-1).addClass('active')
+        })
+      }
+    }
+  }
+
+  Start.init()
+  Initial.init()
+  Work.init()
+  </script>
+</body>
+</html>
