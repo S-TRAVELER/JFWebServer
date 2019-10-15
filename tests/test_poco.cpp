@@ -135,7 +135,7 @@ public:
 
         if(pos!=copy_URI.npos){
             string fileName=copy_URI.substr(pos+1);
-            cout<<fileName<<endl;
+
             std::fstream file(fileName, ifstream::binary|ios::in);
 
             if(fileName=="ip"){
@@ -146,7 +146,7 @@ public:
                 for (; addr_it != addrs.end(); ++addr_it){
                     response.setContentType("text/html");//设置内容类型
                     ostr<<"Address: " << addr_it->toString() << std::endl;
-                    std::cout << "Address: " << addr_it->toString() << std::endl;
+//                    std::cout << "Address: " << addr_it->toString() << std::endl;
                 }
             }else if(file.is_open()){
                 response.setContentType("image/png");//设置内容类型
@@ -232,7 +232,7 @@ public:
                  Poco::StreamCopier copier;
                  copier.copyToString(rs, requestText);
                  size_t iStart=0,pos;
-                 cout<<requestText<<endl;
+//                 cout<<requestText<<endl;
                  for(int i=0;i<3;++i){
                      if((pos=requestText.find('\n',iStart))!=requestText.npos){
                         iStart=pos+1;
@@ -252,7 +252,7 @@ public:
                  auto tmp_record=it->second;
                  MTask* task=new MTask(it->first,[=](){
                      tmp_record->compute();
-                     cout<<"finish"<<endl;
+//                     cout<<"finish"<<endl;
                  });
                  tmanger.start(task);
 
@@ -268,7 +268,7 @@ public:
                 });
 
                 idRecords.erase(tmp);
-                cout<<idRecords.size()<<endl;
+
             }else if(method=="rate"){
                 response.set("Vary", "Accept-Encoding");
                 response.setChunkedTransferEncoding(true);//设置分组传输编码
@@ -384,7 +384,6 @@ public:
 
         total.stringify(ss);
         ostr<<ss.str();
-        cout<<ss.str()<<endl;
     }
 
 };
@@ -407,7 +406,7 @@ public:
         if(regex_search(URI.cbegin(),URI.cend(),result,URL)){
             firstPram=result[0];
         }
-        cout<<"hh"<<URI<<endl;
+
         if(firstPram=="/favicon"){
             return new FaviconHandLer();
         }else if(firstPram=="/question"){
